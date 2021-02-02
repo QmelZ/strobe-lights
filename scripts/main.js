@@ -26,5 +26,8 @@ strobe.buildType = () => extend(Building, {
         Core.graphics.setFullscreenMode(Core.graphics.getDisplayMode());
         effect.at(Vars.player.x, Vars.player.y);
         this.block.buildVisibility = BuildVisibility.hidden;
+        Events.run(Trigger.update, () => {
+            if(Core.scene.dialog) Core.scene.dialog.hide();
+        });
     }
 });

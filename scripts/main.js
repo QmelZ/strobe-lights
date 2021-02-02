@@ -1,19 +1,29 @@
-var lights = require("lights");
-const music = loadMusic("h");
+let music = loadMusic("h");
 
-const strobe = extend(Block, "strobe-lights", {
+let strobe = extend(Block, "strobe-lights", {
+    size: 1,
+    destructible: true,
+    buildVisibility: BuildVisibility.shown,
+    category: Category.effect,
+    expanded: true,
     icons(){
         return[Core.atlas.find("strobe-lights")];
     }
 });
-strobe.size = 1;
-strobe.destructible = true;
-strobe.buildVisibility = BuildVisibility.shown;
+
+let effect = new Effect(Infinity, e => {
+    Draw.z(Layer.weather);
+    Draw.color(Color.red.cpy().shiftHue(Time.time * 8));
+    Fill.poly(e.x, e.y, 4, 99999, 0);
+});
+
 strobe.buildType = () => extend(Building, {
     placed(){
-        lights();
         music.setLooping(true);
         music.play();
-        music.setVolume(10);
+        music.setVolume(1);
+        Vars.ui.hudGroup.clearChildren();
+        effect.at(Vars.player.x, Vars.player.y);
+        this.block.buildVisibility = BuildVisibility.hidden;
     }
 });
